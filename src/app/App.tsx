@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Smartphone, Monitor } from 'lucide-react';
 import { PhoneFrame } from './components/PhoneFrame';
 import { MobileApp } from './components/MobileApp';
@@ -8,7 +8,32 @@ type View = 'mobile' | 'admin';
 
 export default function App() {
   const [view, setView] = useState<View>('mobile');
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
+  // Detecta se a tela tem menos de 768px (tamanho típico de tablet/celular)
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileDevice(window.innerWidth < 768);
+    };
+    
+    // Executa na montagem inicial
+    handleResize();
+    
+    // Ouve mudanças no tamanho da janela
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // SE FOR CELULAR: Retorna APENAS o MobileApp (sem vitrine, sem barra superior)
+  if (isMobileDevice) {
+    return (
+      <div className="w-full h-[100dvh] bg-slate-100 overflow-hidden">
+        <MobileApp />
+      </div>
+    );
+  }
+
+  // SE FOR COMPUTADOR: Retorna o layout original com a vitrine e o Painel
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#0c1424' }}>
       {/* Top nav */}
@@ -103,8 +128,8 @@ export default function App() {
               <span>
                 Fluxo: <span style={{ color: '#94a3b8' }}>Início</span> →{' '}
                 <span style={{ color: '#94a3b8' }}>Dados do Veículo</span> →{' '}
-                <span style={{ color: '#94a3b8' }}>Validação</span> →{' '}
                 <span style={{ color: '#94a3b8' }}>Dados do Motorista</span> →{' '}
+                <span style={{ color: '#94a3b8' }}>Validação</span> →{' '}
                 <span style={{ color: '#94a3b8' }}>Check-in Concluído</span>
               </span>
             </div>
