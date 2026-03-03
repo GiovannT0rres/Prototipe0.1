@@ -91,7 +91,7 @@ export function AdminDashboard() {
           </div>
           <div>
             <p className="font-bold text-base" style={{ color: '#0f2744' }}>
-              Painel de Gestão · ROCK IN RIO 2026
+              Painel de Gestão · South Summit 2026
             </p>
             <p className="text-sm" style={{ color: '#64748b' }}>
               Portão Norte · Atualizado às 15:02 · Segunda-feira, 03/03/2026

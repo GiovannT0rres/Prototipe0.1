@@ -1,5 +1,5 @@
-
 import { CheckCircle2, LogIn, LogOut } from 'lucide-react';
+import { useEffect } from 'react';
 
 interface Props {
   type: 'checkin' | 'checkout';
@@ -24,6 +24,13 @@ export function SuccessScreen({
   onNewOperation,
   onHome,
 }: Props) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onHome();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [onHome]);
+
   const now = new Date();
   const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
   const isCheckin = type === 'checkin';
@@ -119,24 +126,6 @@ export function SuccessScreen({
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Footer buttons */}
-      <div className="flex-shrink-0 px-5 pb-6 flex flex-col gap-3">
-        <button
-          onClick={onNewOperation}
-          className="w-full py-4 rounded-2xl font-bold text-base bg-white transition-opacity active:opacity-80"
-          style={{ color: primaryColor }}
-        >
-          {isCheckin ? '+ Novo Check-in' : '+ Novo Check-out'}
-        </button>
-        <button
-          onClick={onHome}
-          className="w-full py-4 rounded-2xl font-bold text-base border-2 text-white transition-opacity active:opacity-80"
-          style={{ borderColor: 'rgba(255,255,255,0.35)' }}
-        >
-          Voltar ao Início
-        </button>
       </div>
     </div>
   );
