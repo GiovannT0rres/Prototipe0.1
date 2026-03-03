@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { HomeScreen } from './mobile/HomeScreen';
-import { VehicleScreen } from './mobile/VehicleScreen';
-import { DriverScreen } from './mobile/DriverScreen';
-import { SuccessScreen } from './mobile/SuccessScreen';
-import { CheckoutScreen } from './mobile/CheckoutScreen';
-import { ValidationScreen } from './mobile/ValidationScreen';
+import { HomeScreen } from './HomeScreen';
+import { VehicleScreen } from './VehicleScreen';
+import { DriverScreen } from './DriverScreen';
+import { SuccessScreen } from './SuccessScreen';
+import { CheckoutScreen } from './CheckoutScreen';
+import { ValidationScreen } from './ValidationScreen';
+import { ErrorScreen } from './ErrorScreen';
 
 type Screen =
   | 'home'
   | 'checkin-vehicle'
   | 'checkin-driver'
   | 'validation-driver'
+  | 'checkin-failure'
   | 'checkin-success'
   | 'checkout'
   | 'checkout-success';
@@ -18,6 +20,7 @@ type Screen =
 interface FlowData {
   plate: string;
   driverName: string;
+  driverCpf: string;
   driverScore: number;
   checkoutPlate: string;
   checkoutEntryTime: string;
@@ -26,6 +29,7 @@ interface FlowData {
 const INITIAL_DATA: FlowData = {
   plate: '',
   driverName: '',
+  driverCpf: '',
   driverScore: 0,
   checkoutPlate: '',
   checkoutEntryTime: '',
@@ -34,6 +38,7 @@ const INITIAL_DATA: FlowData = {
 export function MobileApp() {
   const [screen, setScreen] = useState<Screen>('home');
   const [data, setData] = useState<FlowData>(INITIAL_DATA);
+  const [failReason, setFailReason] = useState("");
 
   return (
     <div className="h-full overflow-hidden">
@@ -57,26 +62,34 @@ export function MobileApp() {
       {screen === 'checkin-driver' && (
         <DriverScreen
           plate={data.plate}
-          onConfirm={(driverName, driverScore) => {
-            setData((d) => ({ ...d, driverName, driverScore }));
-            setScreen('checkin-success');
+          onConfirm={(driverName, driverCpf, driverScore) => {
+            setData((d) => ({ ...d, driverName, driverCpf, driverScore }));
+            
+            // Regra do Score escondido! 
+            // Se maior que 2000 (Ex: CPF começando com 999), vai para o erro.
+            if (driverScore > 2000) {
+              setFailReason("Acesso negado: Restrições de segurança ativas (Score Elevado).");
+              setScreen('checkin-failure');
+            } else {
+              setScreen('validation-driver');
+            }
           }}
           onBack={() => setScreen('checkin-vehicle')}
         />
       )}
 
-     {screen === 'checkin-driver' && (
-        <DriverScreen
-          plate={data.plate}
-          onConfirm={(driverName, driverScore) => {
-            setData((d) => ({ ...d, driverName, driverScore }));
-            setScreen('checkin-success');
+      {screen === 'validation-driver' && (
+        <ValidationScreen
+          driverName={data.driverName}
+          driverCpf={data.driverCpf}
+          onSuccess={() => setScreen('checkin-success')}
+          onFail={(reason) => {
+            setFailReason(reason);
+            setScreen('checkin-failure');
           }}
-          onBack={() => setScreen('checkin-vehicle')}
+          onBack={() => setScreen('checkin-driver')}
         />
       )}
-
-      
 
       {screen === 'checkin-success' && (
         <SuccessScreen
@@ -87,6 +100,16 @@ export function MobileApp() {
             setData(INITIAL_DATA);
             setScreen('checkin-vehicle');
           }}
+          onHome={() => {
+            setData(INITIAL_DATA);
+            setScreen('home');
+          }}
+        />
+      )}
+
+      {screen === 'checkin-failure' && (
+        <ErrorScreen
+          message={failReason}
           onHome={() => {
             setData(INITIAL_DATA);
             setScreen('home');
