@@ -92,6 +92,7 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
               {[
                 { label: 'Tipo de Veículo', value: selected.type },
                 { label: 'Condutor', value: selected.driver },
+                { label: 'Placa', value: selected.plate },
                 { label: 'Horário de Entrada', value: selected.entryTime },
                 { label: 'Tempo no Pátio', value: selected.duration },
                 { label: 'Portão de Saída', value: 'Norte' },

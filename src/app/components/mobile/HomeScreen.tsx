@@ -93,7 +93,7 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
               REALIZAR CHECK-IN
             </p>
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.3 }}>
-              Registrar entrada de veículo
+              Digite a Placa
             </p>
           </div>
           <ChevronRight size={20} color="rgba(255,255,255,0.6)" />
@@ -114,9 +114,6 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
           <div className="flex-1">
             <p className="font-bold text-base text-white" style={{ lineHeight: 1.3 }}>
               REALIZAR CHECK-OUT
-            </p>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.3 }}>
-              Registrar saída de veículo
             </p>
           </div>
           <ChevronRight size={20} color="rgba(255,255,255,0.6)" />

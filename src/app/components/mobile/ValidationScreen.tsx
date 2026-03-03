@@ -42,9 +42,9 @@ export function ValidationScreen({ driverName, driverCpf, onSuccess, onFail, onB
 
   const handleBackClick = () => {
     if (step === 2) {
-      setStep(1); // Se está na pergunta 2, volta para a pergunta 1
+      setStep(1); 
     } else {
-      onBack(); // Se está na pergunta 1, volta para a tela do motorista
+      onBack(); 
     }
   };
 

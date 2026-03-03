@@ -5,14 +5,12 @@ import { DriverScreen } from './mobile/DriverScreen';
 import { SuccessScreen } from './mobile/SuccessScreen';
 import { CheckoutScreen } from './mobile/CheckoutScreen';
 import { ValidationScreen } from './mobile/ValidationScreen';
-import { ErrorScreen } from './mobile/ErrorScreen';
 
 type Screen =
   | 'home'
   | 'checkin-vehicle'
   | 'checkin-driver'
   | 'validation-driver'
-  | 'checkin-failure'
   | 'checkin-success'
   | 'checkout'
   | 'checkout-success';
@@ -38,7 +36,6 @@ const INITIAL_DATA: FlowData = {
 export function MobileApp() {
   const [screen, setScreen] = useState<Screen>('home');
   const [data, setData] = useState<FlowData>(INITIAL_DATA);
-  const [failReason, setFailReason] = useState("");
 
   return (
     <div className="h-full overflow-hidden">
@@ -64,15 +61,11 @@ export function MobileApp() {
           plate={data.plate}
           onConfirm={(driverName, driverCpf, driverScore) => {
             setData((d) => ({ ...d, driverName, driverCpf, driverScore }));
-            
-            // Regra do Score escondido! 
-            // Se maior que 2000 (Ex: CPF começando com 999), vai para o erro.
-            if (driverScore > 2000) {
-              setFailReason("Acesso negado: Restrições de segurança ativas (Score Elevado).");
-              setScreen('checkin-failure');
-            } else {
-              setScreen('validation-driver');
-            }
+            setScreen('validation-driver');
+          }}
+          onReject={() => {
+            setData(INITIAL_DATA);
+            setScreen('home');
           }}
           onBack={() => setScreen('checkin-vehicle')}
         />
@@ -84,8 +77,8 @@ export function MobileApp() {
           driverCpf={data.driverCpf}
           onSuccess={() => setScreen('checkin-success')}
           onFail={(reason) => {
-            setFailReason(reason);
-            setScreen('checkin-failure');
+            setData(INITIAL_DATA);
+            setScreen('home');
           }}
           onBack={() => setScreen('checkin-driver')}
         />
@@ -107,15 +100,7 @@ export function MobileApp() {
         />
       )}
 
-      {screen === 'checkin-failure' && (
-        <ErrorScreen
-          message={failReason}
-          onHome={() => {
-            setData(INITIAL_DATA);
-            setScreen('home');
-          }}
-        />
-      )}
+
 
       {screen === 'checkout' && (
         <CheckoutScreen
