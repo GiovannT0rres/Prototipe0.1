@@ -1,15 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Prototipo evento</title>
-    </head>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <title>Protótipo Evento</title>
+
+    <style>
+      /* 3. CSS PARA BLOQUEAR A TELA */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        /* 100dvh garante que a barra do Safari não cubra o rodapé do seu app */
+        height: 100dvh; 
+        overflow: hidden; /* Corta qualquer coisa que vazar da tela */
+        background-color: #cbd5e1; /* Cor de fundo (cinza) para quem abrir no PC */
+        overscroll-behavior-y: none; /* Tira o efeito elástico do iOS */
+        -webkit-tap-highlight-color: transparent; /* Remove aquele quadrado azul ao clicar nos botões */
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      /* O TRUQUE DO COMPUTADOR: 
+         Cria uma tela de celular centralizada se a tela for grande.
+         No celular mesmo, ele ocupa 100% normalmente. */
+      #root > div {
+        width: 100%;
+        height: 100%;
+        max-width: 430px; /* Largura máxima do iPhone 15 Pro Max */
+        background-color: #f1f5f9;
+        box-shadow: 0 0 40px rgba(0,0,0,0.15); /* Sombrinha elegante no PC */
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
