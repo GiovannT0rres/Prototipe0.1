@@ -1,3 +1,4 @@
+
 import { XCircle, ShieldAlert } from 'lucide-react';
 
 interface Props {
@@ -8,9 +9,7 @@ interface Props {
 export function ErrorScreen({ message, onHome }: Props) {
   return (
     <div className="h-full flex flex-col" style={{ backgroundColor: '#dc2626' }}>
-      {/* Top hero area */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 text-white">
-        {/* Icon */}
         <div
           className="w-24 h-24 rounded-full flex items-center justify-center mb-5"
           style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
@@ -31,7 +30,6 @@ export function ErrorScreen({ message, onHome }: Props) {
           Ocorreu um bloqueio de segurança. A entrada não foi autorizada.
         </p>
 
-        {/* Error Card */}
         <div
           className="w-full bg-white rounded-2xl overflow-hidden"
           style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.2)' }}
