@@ -1,8 +1,9 @@
 
+import { useState } from 'react';
 import { ChevronRight, LogIn, LogOut, Clock, AlertTriangle, Car } from 'lucide-react';
 
 interface Props {
-  onCheckin: () => void;
+  onCheckin: (plate: string) => void;
   onCheckout: () => void;
 }
 
@@ -10,10 +11,21 @@ const recentOps = [
   { id: 1, plate: 'ABC-1D34', time: '14:28', type: 'in' as const, ok: true, desc: 'Carreta 3/4' },
   { id: 2, plate: 'XYZ-5E78', time: '13:55', type: 'out' as const, ok: true, desc: 'Van de Carga' },
   { id: 3, plate: 'DEF-9F12', time: '13:32', type: 'in' as const, ok: true, desc: 'Caminhão Baú' },
-  { id: 4, plate: 'ROB-3G45', time: '13:15', type: 'in' as const, ok: false, desc: 'Alerta: Roubo/Furto' },
+  { id: 4, plate: 'GHI-2J56', time: '13:10', type: 'out' as const, ok: true, desc: 'Carro de Passeio' },
+  { id: 5, plate: 'JKL-7M89', time: '12:45', type: 'in' as const, ok: true, desc: 'Utilitário' },
+  { id: 6, plate: 'MNO-4P12', time: '12:15', type: 'in' as const, ok: true, desc: 'Caminhão Toco' },
+  { id: 7, plate: 'PQR-8S45', time: '11:50', type: 'out' as const, ok: true, desc: 'Moto de Entrega' },
+  { id: 8, plate: 'STU-1V78', time: '11:20', type: 'in' as const, ok: true, desc: 'Van de Passageiros' },
 ];
 
 export function HomeScreen({ onCheckin, onCheckout }: Props) {
+  const [plate, setPlate] = useState('');
+
+  const handleCheckin = () => {
+    if (plate.trim()) {
+      onCheckin(plate.trim().toUpperCase());
+    }
+  };
   return (
     <div className="h-full flex flex-col" style={{ backgroundColor: '#f1f5f9' }}>
       {/* Event Header */}
@@ -45,10 +57,9 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {[
             { label: 'No pátio', value: '45', highlight: true },
-            { label: 'Entradas', value: '120', highlight: false },
             { label: 'Saídas', value: '85', highlight: false },
           ].map((stat) => (
             <div
@@ -76,10 +87,9 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
-        {/* Check-in CTA */}
-        <button
-          onClick={onCheckin}
-          className="w-full rounded-2xl flex items-center gap-4 p-5 text-left transition-opacity active:opacity-80"
+        {/* Check-in Input Area */}
+        <div
+          className="w-full rounded-2xl flex items-center gap-3 p-4 transition-opacity"
           style={{ backgroundColor: '#16a34a' }}
         >
           <div
@@ -89,15 +99,28 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
             <LogIn size={26} color="white" />
           </div>
           <div className="flex-1">
-            <p className="font-bold text-base text-white" style={{ lineHeight: 1.3 }}>
-              REALIZAR CHECK-IN
+            <p className="font-bold text-sm text-white mb-1" style={{ lineHeight: 1.2 }}>
+              ENTRADA VEÍCULO
             </p>
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.3 }}>
-              Digite a Placa
-            </p>
+            <input
+              type="text"
+              value={plate}
+              onChange={(e) => setPlate(e.target.value.toUpperCase().slice(0, 8))}
+              placeholder="Digite a Placa"
+              className="w-full bg-transparent outline-none font-bold placeholder-white/60"
+              style={{ fontSize: 16, letterSpacing: '0.05em', color: 'white' }}
+              onKeyDown={(e) => e.key === 'Enter' && handleCheckin()}
+            />
           </div>
-          <ChevronRight size={20} color="rgba(255,255,255,0.6)" />
-        </button>
+          <button 
+            onClick={handleCheckin}
+            disabled={!plate.trim()}
+            className="w-12 h-12 flex items-center justify-center rounded-xl transition-all disabled:opacity-50"
+            style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+          >
+            <ChevronRight size={24} color="white" />
+          </button>
+        </div>
 
         {/* Check-out CTA */}
         <button
@@ -113,7 +136,7 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
           </div>
           <div className="flex-1">
             <p className="font-bold text-base text-white" style={{ lineHeight: 1.3 }}>
-              REALIZAR CHECK-OUT
+              SAÍDA VEÍCULO
             </p>
           </div>
           <ChevronRight size={20} color="rgba(255,255,255,0.6)" />

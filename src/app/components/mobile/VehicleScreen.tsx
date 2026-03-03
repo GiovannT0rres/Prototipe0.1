@@ -1,30 +1,31 @@
-import { useState } from 'react';
-import { ArrowLeft, Camera, CheckCircle2, AlertOctagon, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Camera, CheckCircle2, Loader2 } from 'lucide-react';
 
 interface Props {
+  initialPlate?: string;
   onApproved: (plate: string) => void;
   onBack: () => void;
 }
 
-type State = 'idle' | 'loading' | 'approved' | 'blocked' | 'reproved';
+type State = 'loading' | 'approved' | 'reproved';
 
-export function VehicleScreen({ onApproved, onBack }: Props) {
-  const [plate, setPlate] = useState('');
-  const [state, setState] = useState<State>('idle');
+export function VehicleScreen({ initialPlate = '', onApproved, onBack }: Props) {
+  const [plate, setPlate] = useState(initialPlate);
+  const [state, setState] = useState<State>('loading');
   const [observation, setObservation] = useState('');
 
-  const handleValidate = () => {
-    if (!plate.trim()) return;
-    setState('loading');
-    setTimeout(() => {
-      setState(plate.toUpperCase().includes('ROB') ? 'blocked' : 'approved');
-    }, 1600);
-  };
+  // Auto-validate if plate is initially provided from Home Screen
+  useEffect(() => {
+    if (state === 'loading') {
+      const timer = setTimeout(() => {
+        setState('approved');
+      }, 1600);
+      return () => clearTimeout(timer);
+    }
+  }, [state, plate]);
 
   const handleReset = () => {
-    setPlate('');
-    setState('idle');
-    setObservation('');
+    onBack();
   };
 
   return (
@@ -80,60 +81,7 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-5">
-        {/* Title and Input */}
-        {(state === 'idle' || state === 'loading') && (
-          <div className="flex flex-col gap-5">
-            <div>
-              <p className="font-semibold text-base" style={{ color: '#1e293b', lineHeight: 1.4 }}>
-                Identificação do Veículo
-              </p>
-              <p className="text-sm mt-1" style={{ color: '#64748b' }}>
-                Digite a placa do veículo ou tire uma foto da placa.
-              </p>
-            </div>
 
-            {/* Plate input */}
-            <div>
-              <label
-                className="text-sm font-semibold block mb-2"
-                style={{ color: '#475569' }}
-              >
-                Placa do Veículo
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={plate}
-                  onChange={(e) => setPlate(e.target.value.toUpperCase().slice(0, 8))}
-                  placeholder="ABC-1234"
-                  disabled={state !== 'idle'}
-                  className="w-full rounded-2xl border-2 px-4 py-4 text-center font-bold outline-none transition-colors"
-                  style={{
-                    fontSize: 24,
-                    letterSpacing: '0.2em',
-                    borderColor:
-                      state === 'loading'
-                        ? '#2563eb'
-                        : '#e2e8f0',
-                    backgroundColor: 'white',
-                    color: '#1e293b',
-                  }}
-                />
-                
-                {/* Camera button inside input */}
-                {state === 'idle' && (
-                  <button
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-xl hover:bg-slate-100 transition-colors"
-                    style={{ color: '#64748b' }}
-                    title="Tirar Foto da Placa"
-                  >
-                    <Camera size={22} />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Loading */}
         {state === 'loading' && (
@@ -164,12 +112,11 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
               </p>
             </div>
             
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2">
               {[
                 { label: 'Placa', value: plate },
                 { label: 'Tipo', value: 'Carreta 3/4' },
                 { label: 'Cor', value: 'Branco' },
-                { label: 'Ano/Mod.', value: '2022' },
               ].map((item) => (
                 <div key={item.label} className="bg-white rounded-xl px-3 py-3 border" style={{ borderColor: '#bbf7d0' }}>
                   <p className="text-xs font-medium mb-1" style={{ color: '#16a34a' }}>
@@ -205,9 +152,6 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
         {state === 'reproved' && (
           <div className="flex flex-col gap-6">
             <div>
-              <p className="font-bold text-xl" style={{ color: '#1e293b' }}>
-                Registrar Recusa
-              </p>
               <p className="text-sm mt-1" style={{ color: '#64748b' }}>
                 Capture uma foto do veículo e adicione uma observação (opcional).
               </p>
@@ -245,89 +189,9 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
           </div>
         )}
 
-        {/* Blocked result */}
-        {state === 'blocked' && (
-          <div
-            className="rounded-2xl p-5 flex flex-col gap-4"
-            style={{ backgroundColor: '#fff1f2', border: '2px solid #dc2626' }}
-          >
-            <div>
-              <p className="font-bold text-base" style={{ color: '#b91c1c' }}>Aviso do Sistema</p>
-              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>
-                Foram encontradas <span className="font-bold">restrições de segurança ou alertas</span> para o veículo informado.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl px-3 py-2 border" style={{ borderColor: '#fecaca' }}>
-              <p className="text-xs font-medium" style={{ color: '#b91c1c' }}>Tipo de Restrição</p>
-              <p className="text-sm font-bold" style={{ color: '#991b1b' }}>Roubo / Furto (Registrado em: 15/01/2026)</p>
-            </div>
 
-            <p className="text-sm font-semibold" style={{ color: '#b91c1c' }}>
-              A entrada está bloqueada por padrão. Como deseja prosseguir?
-            </p>
 
-            <div className="flex flex-col gap-3 mt-2">
-              <button
-                onClick={() => onApproved(plate)}
-                className="w-full py-4 rounded-2xl font-bold text-base bg-white transition-opacity active:opacity-80"
-                style={{ border: '2px solid #16a34a', color: '#16a34a' }}
-              >
-                Liberar Acesso (Exceção)
-              </button>
-              <button
-                onClick={() => setState('reproved')}
-                className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity active:opacity-80"
-                style={{ backgroundColor: '#dc2626' }}
-              >
-                Manter Bloqueio e Recusar
-              </button>
-            </div>
-          </div>
-        )}
 
-        {/* Hint */}
-        {state === 'idle' && (
-          <div
-            className="rounded-xl px-4 py-3"
-            style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' }}
-          >
-            <p className="text-xs" style={{ color: '#1d4ed8' }}>
-              💡 <span style={{ fontWeight: 600 }}>Dica do protótipo:</span> Use{' '}
-              <span style={{ fontWeight: 700 }}>"ROB-1234"</span> para simular um alerta de
-              restrição (roubo/furto).
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* Footer */}
-      <div
-        className="flex-shrink-0 p-4 bg-white"
-        style={{ borderTop: '1px solid #f1f5f9' }}
-      >
-        {state === 'idle' && (
-          <button
-            onClick={handleValidate}
-            disabled={!plate.trim()}
-            className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity"
-            style={{
-              backgroundColor: plate.trim() ? '#2563eb' : '#cbd5e1',
-              cursor: plate.trim() ? 'pointer' : 'default',
-            }}
-          >
-            Validar Veículo
-          </button>
-        )}
-        {state === 'loading' && (
-          <button
-            disabled
-            className="w-full py-4 rounded-2xl font-bold text-base text-white"
-            style={{ backgroundColor: '#94a3b8' }}
-          >
-            Consultando...
-          </button>
-        )}
 
         {state === 'reproved' && (
           <div className="flex gap-3">
@@ -343,7 +207,7 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
               className="flex-1 py-4 rounded-2xl font-bold text-sm text-white transition-opacity active:opacity-80"
               style={{ backgroundColor: '#ef4444' }}
             >
-              Confirmar Recusa
+              Registrar Inconsistência
             </button>
           </div>
         )}

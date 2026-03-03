@@ -5,12 +5,14 @@ import { DriverScreen } from './mobile/DriverScreen';
 import { SuccessScreen } from './mobile/SuccessScreen';
 import { CheckoutScreen } from './mobile/CheckoutScreen';
 import { ValidationScreen } from './mobile/ValidationScreen';
+import { SelfieScreen } from './mobile/SelfieScreen';
 
 type Screen =
   | 'home'
   | 'checkin-vehicle'
   | 'checkin-driver'
   | 'validation-driver'
+  | 'checkin-selfie'
   | 'checkin-success'
   | 'checkout'
   | 'checkout-success';
@@ -19,7 +21,7 @@ interface FlowData {
   plate: string;
   driverName: string;
   driverCpf: string;
-  driverScore: number;
+  isNewDriver: boolean;
   checkoutPlate: string;
   checkoutEntryTime: string;
 }
@@ -28,7 +30,7 @@ const INITIAL_DATA: FlowData = {
   plate: '',
   driverName: '',
   driverCpf: '',
-  driverScore: 0,
+  isNewDriver: false,
   checkoutPlate: '',
   checkoutEntryTime: '',
 };
@@ -41,13 +43,20 @@ export function MobileApp() {
     <div className="h-full overflow-hidden">
       {screen === 'home' && (
         <HomeScreen
-          onCheckin={() => setScreen('checkin-vehicle')}
-          onCheckout={() => setScreen('checkout')}
+          onCheckin={(plate) => {
+            setData({ ...INITIAL_DATA, plate });
+            setScreen('checkin-vehicle');
+          }}
+          onCheckout={() => {
+            setData(INITIAL_DATA);
+            setScreen('checkout');
+          }}
         />
       )}
 
       {screen === 'checkin-vehicle' && (
         <VehicleScreen
+          initialPlate={data.plate}
           onApproved={(plate) => {
             setData((d) => ({ ...d, plate }));
             setScreen('checkin-driver');
@@ -59,13 +68,13 @@ export function MobileApp() {
       {screen === 'checkin-driver' && (
         <DriverScreen
           plate={data.plate}
-          onConfirm={(driverName, driverCpf, driverScore) => {
-            setData((d) => ({ ...d, driverName, driverCpf, driverScore }));
-            setScreen('validation-driver');
-          }}
-          onReject={() => {
-            setData(INITIAL_DATA);
-            setScreen('home');
+          onConfirm={(driverName, driverCpf, isNewDriver) => {
+            setData((d) => ({ ...d, driverName, driverCpf, isNewDriver }));
+            if (isNewDriver) {
+              setScreen('validation-driver');
+            } else {
+              setScreen('checkin-selfie');
+            }
           }}
           onBack={() => setScreen('checkin-vehicle')}
         />
@@ -75,12 +84,20 @@ export function MobileApp() {
         <ValidationScreen
           driverName={data.driverName}
           driverCpf={data.driverCpf}
-          onSuccess={() => setScreen('checkin-success')}
-          onFail={(reason) => {
-            setData(INITIAL_DATA);
-            setScreen('home');
-          }}
+          onSuccess={() => setScreen('checkin-selfie')}
           onBack={() => setScreen('checkin-driver')}
+        />
+      )}
+
+      {screen === 'checkin-selfie' && (
+        <SelfieScreen
+          driverName={data.driverName}
+          isNewDriver={data.isNewDriver}
+          onConfirm={() => setScreen('checkin-success')}
+          onBack={() => {
+            if (data.isNewDriver) setScreen('validation-driver');
+            else setScreen('checkin-driver');
+          }}
         />
       )}
 
