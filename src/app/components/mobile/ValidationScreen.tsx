@@ -19,7 +19,7 @@ export function ValidationScreen({ driverName, driverCpf, onSuccess, onFail, onB
   const [errorCount, setErrorCount] = useState(0);
 
   const handleVerify = () => {
-    // Respostas corretas do protótipo
+    // Respostas corretas
     const isMotherCorrect = selectedMother === 'Maria Silva';
     const isMonthCorrect = selectedMonth === 'Abril';
 

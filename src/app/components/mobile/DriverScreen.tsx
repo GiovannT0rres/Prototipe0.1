@@ -27,10 +27,13 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
     
     setTimeout(() => {
       setIsLoading(false);
-      // Simula a busca: CPF começando com 999 retorna score alto
-      const driver = doc.replace(/\D/g, '').startsWith('999') ? HIGH_RISK_DRIVER : OK_DRIVER;
+      // Simula a busca: CPF começando com 999 retorna score alto (risco crítico)
+      // O porteiro não vê isso, apenas o sistema!
+      const numericDoc = doc.replace(/\D/g, '');
+      const driver = numericDoc.startsWith('999') ? HIGH_RISK_DRIVER : OK_DRIVER;
+      
       onConfirm(driver.name, doc, driver.score);
-    }, 1800);
+    }, 1500);
   };
 
   return (
@@ -59,7 +62,7 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
       <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-5">
         <div>
           <p className="font-semibold text-base" style={{ color: '#1e293b', lineHeight: 1.4 }}>Identificação do Condutor</p>
-          <p className="text-sm mt-1" style={{ color: '#64748b' }}>Informe o CPF do condutor.</p>
+          <p className="text-sm mt-1" style={{ color: '#64748b' }}>Informe o CPF do condutor para verificação de segurança sistêmica.</p>
         </div>
 
         <div>
@@ -78,14 +81,14 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
         {isLoading && (
           <div className="bg-white rounded-2xl p-6 flex flex-col items-center gap-3" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
             <Loader2 size={36} color="#2563eb" className="animate-spin" />
-            <p className="text-sm font-semibold" style={{ color: '#1e293b' }}>Buscando dados no sistema...</p>
+            <p className="text-sm font-semibold" style={{ color: '#1e293b' }}>Analisando dados no sistema...</p>
           </div>
         )}
 
         {!isLoading && (
           <div className="rounded-xl px-4 py-3" style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' }}>
             <p className="text-xs" style={{ color: '#1d4ed8' }}>
-              💡 <span style={{ fontWeight: 600 }}>Dica:</span> Inicie com <span style={{ fontWeight: 700 }}>"999"</span> para simular bloqueio por Score. Outros CPFs vão para a validação.
+              💡 <span style={{ fontWeight: 600 }}>Dica do Protótipo:</span> Inicie o CPF com <span style={{ fontWeight: 700 }}>"999"</span> para o sistema reprovar o motorista secretamente. Qualquer outro número avançará para a tela de perguntas.
             </p>
           </div>
         )}
