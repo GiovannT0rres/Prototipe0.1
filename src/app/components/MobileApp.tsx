@@ -1,11 +1,10 @@
-import { useState } from 'react';
-import { HomeScreen } from './HomeScreen';
-import { VehicleScreen } from './VehicleScreen';
-import { DriverScreen } from './DriverScreen';
-import { SuccessScreen } from './SuccessScreen';
-import { CheckoutScreen } from './CheckoutScreen';
-import { ValidationScreen } from './ValidationScreen';
-import { ErrorScreen } from './ErrorScreen';
+import { HomeScreen } from './mobile/HomeScreen';
+import { VehicleScreen } from './mobile/VehicleScreen';
+import { DriverScreen } from './mobile/DriverScreen';
+import { SuccessScreen } from './mobile/SuccessScreen';
+import { CheckoutScreen } from './mobile/CheckoutScreen';
+import { ValidationScreen } from './mobile/ValidationScreen';
+import { ErrorScreen } from './mobile/ErrorScreen';
 
 type Screen =
   | 'home'
