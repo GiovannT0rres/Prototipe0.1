@@ -248,37 +248,41 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
         {/* Blocked result */}
         {state === 'blocked' && (
           <div
-            className="rounded-2xl p-5"
+            className="rounded-2xl p-5 flex flex-col gap-4"
             style={{ backgroundColor: '#fff1f2', border: '2px solid #dc2626' }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <AlertOctagon size={30} color="#dc2626" />
-              <div>
-                <p className="font-bold text-base" style={{ color: '#b91c1c' }}>
-                  🚨 RESTRIÇÃO ENCONTRADA
-                </p>
-                <p className="text-sm" style={{ color: '#dc2626' }}>
-                  Veículo com alerta ativo
-                </p>
-              </div>
-            </div>
-            <div
-              className="bg-white rounded-xl px-4 py-3 mb-3"
-              style={{ border: '1px solid #fecaca' }}
-            >
-              <p className="text-xs mb-1" style={{ color: '#94a3b8' }}>
-                Tipo de Restrição
-              </p>
-              <p className="font-bold text-sm" style={{ color: '#b91c1c' }}>
-                Roubo / Furto
-              </p>
-              <p className="text-xs mt-1" style={{ color: '#94a3b8' }}>
-                Registrado em: 15/01/2026
+            <div>
+              <p className="font-bold text-base" style={{ color: '#b91c1c' }}>Aviso do Sistema</p>
+              <p className="text-sm mt-1" style={{ color: '#dc2626' }}>
+                Foram encontradas <span className="font-bold">restrições de segurança ou alertas</span> para o veículo informado.
               </p>
             </div>
-            <p className="text-xs" style={{ color: '#b91c1c' }}>
-              ⚠️ Atenção: Não libere o acesso. Acione o procedimento de segurança imediatamente.
+            
+            <div className="bg-white rounded-xl px-3 py-2 border" style={{ borderColor: '#fecaca' }}>
+              <p className="text-xs font-medium" style={{ color: '#b91c1c' }}>Tipo de Restrição</p>
+              <p className="text-sm font-bold" style={{ color: '#991b1b' }}>Roubo / Furto (Registrado em: 15/01/2026)</p>
+            </div>
+
+            <p className="text-sm font-semibold" style={{ color: '#b91c1c' }}>
+              A entrada está bloqueada por padrão. Como deseja prosseguir?
             </p>
+
+            <div className="flex flex-col gap-3 mt-2">
+              <button
+                onClick={() => onApproved(plate)}
+                className="w-full py-4 rounded-2xl font-bold text-base bg-white transition-opacity active:opacity-80"
+                style={{ border: '2px solid #16a34a', color: '#16a34a' }}
+              >
+                Liberar Acesso (Exceção)
+              </button>
+              <button
+                onClick={() => setState('reproved')}
+                className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity active:opacity-80"
+                style={{ backgroundColor: '#dc2626' }}
+              >
+                Manter Bloqueio e Recusar
+              </button>
+            </div>
           </div>
         )}
 
@@ -345,24 +349,6 @@ export function VehicleScreen({ onApproved, onBack }: Props) {
         )}
 
 
-        {state === 'blocked' && (
-          <div className="flex gap-3">
-            <button
-              onClick={onBack}
-              className="flex-1 py-4 rounded-2xl font-bold text-sm text-white transition-opacity active:opacity-80"
-              style={{ backgroundColor: '#dc2626' }}
-            >
-              Bloquear Entrada
-            </button>
-            <button
-              onClick={handleReset}
-              className="flex-1 py-4 rounded-2xl font-bold text-sm border-2 transition-opacity active:opacity-80"
-              style={{ borderColor: '#cbd5e1', color: '#64748b' }}
-            >
-              Falso Positivo
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
