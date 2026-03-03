@@ -1,4 +1,4 @@
-import { ArrowLeft, Camera, User } from 'lucide-react';
+import { ArrowLeft, User } from 'lucide-react';
 
 interface Props {
   driverName: string;
@@ -16,7 +16,7 @@ export function SelfieScreen({ driverName, isNewDriver, onConfirm, onBack }: Pro
           <ArrowLeft size={19} color="white" />
         </button>
         <div className="flex-1">
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Check-in · Foto</p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Check-in · Etapa 3 de 3</p>
           <p className="font-semibold text-white text-sm">
             {isNewDriver ? 'Cadastro Facial' : 'Confirmação Facial'}
           </p>
@@ -36,16 +36,9 @@ export function SelfieScreen({ driverName, isNewDriver, onConfirm, onBack }: Pro
           </p>
         </div>
 
-        {isNewDriver ? (
-          <button onClick={onConfirm} className="w-full max-w-[240px] aspect-[3/4] bg-slate-200 rounded-3xl overflow-hidden flex flex-col items-center justify-center border-4 border-white shadow-sm mt-2 transition-colors hover:bg-slate-300 active:bg-slate-300">
-            <Camera size={54} color="#94a3b8" />
-            <p className="text-sm font-bold text-slate-500 mt-4">Tirar Foto Frontal</p>
-          </button>
-        ) : (
-          <button onClick={onConfirm} className="w-full max-w-[240px] aspect-[3/4] bg-slate-200 rounded-3xl overflow-hidden flex flex-col items-center justify-center border-4 border-white shadow-sm mt-2 transition-colors hover:bg-slate-300 active:bg-slate-300">
-            <User size={84} color="#94a3b8" />
-          </button>
-        )}
+        <button onClick={onConfirm} className="w-full max-w-[240px] aspect-[3/4] bg-slate-200 rounded-3xl overflow-hidden flex flex-col items-center justify-center border-4 border-white shadow-sm mt-2 transition-colors hover:bg-slate-300 active:bg-slate-300">
+          <User size={160} color="#94a3b8" />
+        </button>
       </div>
     </div>
   );

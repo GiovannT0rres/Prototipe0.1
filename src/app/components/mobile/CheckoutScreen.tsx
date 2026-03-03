@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, Clock, LogOut, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Search, Clock, LogOut, ChevronRight, User } from 'lucide-react';
 
 interface Vehicle {
   id: number;
@@ -85,6 +85,13 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
                 >
                   {selected.plate}
                 </p>
+              </div>
+            </div>
+
+            {/* Profile Photo Icon */}
+            <div className="flex justify-center py-4 bg-white border-b" style={{ borderColor: '#f8fafc' }}>
+              <div className="w-24 h-24 rounded-full bg-slate-200 flex items-center justify-center border-4 border-white shadow-sm">
+                <User size={48} color="#94a3b8" />
               </div>
             </div>
 

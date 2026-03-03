@@ -27,7 +27,7 @@ export function ValidationScreen({ driverName, driverCpf, onSuccess, onBack }: P
         </button>
         <div className="flex-1">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            Check-in · Validação
+            Check-in · Etapa 2 de 3 (Validação)
           </p>
           <p className="font-semibold text-white text-sm">Confirmação de Identidade</p>
         </div>

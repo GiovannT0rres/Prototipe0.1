@@ -40,7 +40,7 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
           <ArrowLeft size={19} color="white" />
         </button>
         <div className="flex-1">
-          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Check-in · Etapa 2 de 4</p>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>Check-in · Etapa 2 de 3</p>
           <p className="font-semibold text-white text-sm">Dados do Motorista</p>
         </div>
       </div>
