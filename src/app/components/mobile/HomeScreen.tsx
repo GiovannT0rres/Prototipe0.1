@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
-import { ChevronRight, LogIn, LogOut, Clock, AlertTriangle, Car } from 'lucide-react';
+import { ChevronRight, LogIn, LogOut, Clock, CircleUser } from 'lucide-react';
+import esIcon from '../../../assets/images/ESicon.ico';
 
 interface Props {
   onCheckin: (plate: string) => void;
   onCheckout: () => void;
+  onViewOp: (op: any) => void;
 }
 
 const recentOps = [
@@ -18,7 +20,7 @@ const recentOps = [
   { id: 8, plate: 'STU-1V78', time: '11:20', type: 'in' as const, ok: true, desc: 'Van de Passageiros' },
 ];
 
-export function HomeScreen({ onCheckin, onCheckout }: Props) {
+export function HomeScreen({ onCheckin, onCheckout, onViewOp }: Props) {
   const [plate, setPlate] = useState('');
 
   const handleCheckin = () => {
@@ -39,12 +41,9 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
               className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}
             >
-              <Car size={20} color="white" />
+              <img src={esIcon} alt="Ícone ES" height={100} width={100}/>
             </div>
             <div>
-              <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                Controle de Acesso
-              </p>
               <p className="text-sm font-semibold text-white">South Summit 2026</p>
             </div>
           </div>
@@ -92,12 +91,6 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
           className="w-full rounded-2xl flex items-center gap-3 p-4 transition-opacity"
           style={{ backgroundColor: '#16a34a' }}
         >
-          <div
-            className="rounded-xl p-3 flex-shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
-          >
-            <LogIn size={26} color="white" />
-          </div>
           <div className="flex-1">
             <p className="font-bold text-sm text-white mb-1" style={{ lineHeight: 1.2 }}>
               ENTRADA VEÍCULO
@@ -105,10 +98,10 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
             <input
               type="text"
               value={plate}
-              onChange={(e) => setPlate(e.target.value.toUpperCase().slice(0, 8))}
-              placeholder="Digite a Placa"
-              className="w-full bg-transparent outline-none font-bold placeholder-white/60"
-              style={{ fontSize: 16, letterSpacing: '0.05em', color: 'white' }}
+              onChange={(e) => setPlate(e.target.value.slice(0, 14))}
+              placeholder="Digite o CPF do motorista"
+              className="w-full bg-white text-black rounded-lg px-3 py-2 outline-none font-bold placeholder-black/45 mt-1"
+              style={{ fontSize: 15, letterSpacing: '0.05em' }}
               onKeyDown={(e) => e.key === 'Enter' && handleCheckin()}
             />
           </div>
@@ -118,7 +111,7 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
             className="w-12 h-12 flex items-center justify-center rounded-xl transition-all disabled:opacity-50"
             style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
           >
-            <ChevronRight size={24} color="white" />
+            <LogIn size={24} color="white" />
           </button>
         </div>
 
@@ -128,18 +121,17 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
           className="w-full rounded-2xl flex items-center gap-4 p-5 text-left transition-opacity active:opacity-80"
           style={{ backgroundColor: '#1d4ed8' }}
         >
+          <div className="flex-1">
+            <p className="font-bold text-base text-white" style={{ lineHeight: 1.3 }}>
+              SAÍDA VEÍCULO
+            </p>
+          </div>
           <div
             className="rounded-xl p-3 flex-shrink-0"
             style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
           >
             <LogOut size={26} color="white" />
           </div>
-          <div className="flex-1">
-            <p className="font-bold text-base text-white" style={{ lineHeight: 1.3 }}>
-              SAÍDA VEÍCULO
-            </p>
-          </div>
-          <ChevronRight size={20} color="rgba(255,255,255,0.6)" />
         </button>
 
         {/* Recent operations */}
@@ -159,30 +151,16 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
             </span>
           </div>
           {recentOps.map((op) => (
-            <div
+            <button
               key={op.id}
-              className="px-4 py-3 flex items-center gap-3"
+              onClick={() => onViewOp(op)}
+              className="w-full px-4 py-3 flex items-center gap-3 text-left active:bg-slate-50 transition-colors"
               style={{ borderBottom: '1px solid #f8fafc' }}
             >
               <div
-                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                style={{
-                  backgroundColor: op.ok
-                    ? op.type === 'in'
-                      ? '#dcfce7'
-                      : '#dbeafe'
-                    : '#fee2e2',
-                }}
+                className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden bg-slate-200"
               >
-                {op.ok ? (
-                  op.type === 'in' ? (
-                    <LogIn size={15} color="#16a34a" />
-                  ) : (
-                    <LogOut size={15} color="#1d4ed8" />
-                  )
-                ) : (
-                  <AlertTriangle size={15} color="#dc2626" />
-                )}
+                <CircleUser size={40} color="#94a3b8" />
               </div>
               <div className="flex-1 min-w-0">
                 <p
@@ -196,11 +174,14 @@ export function HomeScreen({ onCheckin, onCheckout }: Props) {
                   {op.desc}
                 </p>
               </div>
-              <div className="flex items-center gap-1 flex-shrink-0" style={{ color: '#94a3b8' }}>
-                <Clock size={12} />
-                <span className="text-xs">{op.time}</span>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex items-center gap-1" style={{ color: '#94a3b8' }}>
+                  <Clock size={12} />
+                  <span className="text-xs">{op.time}</span>
+                </div>
+                <ChevronRight size={14} color="#cbd5e1" />
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>

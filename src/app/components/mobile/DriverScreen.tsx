@@ -27,7 +27,7 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
     
     setTimeout(() => {
       const numericDoc = doc.replace(/\D/g, '');
-      const driver = numericDoc.startsWith('111') ? EXISTING_DRIVER : NEW_DRIVER;
+      const driver = numericDoc === '1234' ? EXISTING_DRIVER : NEW_DRIVER;
       onConfirm(driver.name, doc, driver.isNew);
     }, 1500);
   };
@@ -95,7 +95,7 @@ export function DriverScreen({ plate, onConfirm, onBack }: Props) {
         {step === 'input' && (
           <div className="rounded-xl px-4 py-3" style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' }}>
             <p className="text-xs" style={{ color: '#1d4ed8' }}>
-              💡 <span style={{ fontWeight: 600 }}>Dica do Protótipo:</span> Inicie o CPF com <span style={{ fontWeight: 700 }}>"111"</span> para simular um motorista <span style={{ fontWeight: 700 }}>CADASTRADO</span> e pular para a selfie. Qualquer outro CPF será considerado <span style={{ fontWeight: 700 }}>NÃO CADASTRADO</span>.
+              💡 <span style={{ fontWeight: 600 }}>Dica do Protótipo:</span> Digite o CPF <span style={{ fontWeight: 700 }}>"1234"</span> para simular um motorista <span style={{ fontWeight: 700 }}>CADASTRADO</span>. Qualquer outro CPF será considerado <span style={{ fontWeight: 700 }}>NÃO CADASTRADO</span>.
             </p>
           </div>
         )}
