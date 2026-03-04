@@ -114,15 +114,7 @@ export function SuccessScreen({
           </div>
         </div>
 
-        {isReceipt && (
-          <button
-            onClick={onHome}
-            className="w-full mt-6 py-4 rounded-2xl font-bold text-base transition-all active:bg-slate-200"
-            style={{ backgroundColor: 'white', color: '#1e293b', border: '2px solid #e2e8f0' }}
-          >
-            Voltar
-          </button>
-        )}
+
       </div>
     </div>
   );
