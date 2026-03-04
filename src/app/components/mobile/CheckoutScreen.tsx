@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, Clock, LogOut, ChevronRight, User } from 'lucide-react';
+import { ArrowLeft, Search, Clock, LogOut, ChevronRight, User, CircleUser } from 'lucide-react';
 
 interface Vehicle {
   id: number;
@@ -103,10 +103,10 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
                 }}
               >
                 <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.15)' : '#eff6ff' }}
+                  className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
+                  style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.15)' : '#f1f5f9' }}
                 >
-                  <LogOut size={20} color={isSelected ? 'white' : '#1d4ed8'} />
+                  <CircleUser size={44} color={isSelected ? 'white' : '#94a3b8'} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p
@@ -115,9 +115,18 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
                   >
                     {vehicle.plate}
                   </p>
-                  <p className="text-xs truncate font-medium" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : '#64748b' }}>
+                  <p className="text-xs truncate font-medium mb-1.5" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : '#64748b' }}>
                     {vehicle.type} · {vehicle.driver}
                   </p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.12)' : '#f8fafc', border: isSelected ? 'none' : '1px solid #e2e8f0' }}>
+                      <Clock size={10} color={isSelected ? 'white' : '#64748b'} />
+                      <span className="text-[10px] font-bold" style={{ color: isSelected ? 'white' : '#64748b' }}>Entrada: {vehicle.entryTime}</span>
+                    </div>
+                    <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.12)' : '#f8fafc', border: isSelected ? 'none' : '1px solid #e2e8f0' }}>
+                      <span className="text-[10px] font-bold" style={{ color: isSelected ? 'white' : '#64748b' }}>Tempo: {vehicle.duration}</span>
+                    </div>
+                  </div>
                 </div>
 
               </button>
