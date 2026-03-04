@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, Clock, LogOut, ChevronRight, User } from 'lucide-react';
+import { ArrowLeft, Search, Clock, LogOut, ChevronRight, User, CircleUser } from 'lucide-react';
 
 interface Vehicle {
   id: number;
@@ -34,118 +34,6 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
       v.plate.toLowerCase().includes(search.toLowerCase()) ||
       v.driver.toLowerCase().includes(search.toLowerCase())
   );
-
-  if (selected) {
-    return (
-      <div className="h-full flex flex-col" style={{ backgroundColor: '#f1f5f9' }}>
-        {/* Header */}
-        <div
-          className="flex-shrink-0 px-4 py-4 flex items-center gap-3"
-          style={{ backgroundColor: '#1d4ed8' }}
-        >
-          <button
-            onClick={() => setSelected(null)}
-            className="p-2 rounded-xl flex-shrink-0"
-            style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-          >
-            <ArrowLeft size={19} color="white" />
-          </button>
-          <div>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
-              Check-out
-            </p>
-            <p className="font-semibold text-white text-sm">Confirmar Saída</p>
-          </div>
-        </div>
-
-        {/* Confirm content */}
-        <div className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-5">
-          {/* Vehicle card */}
-          <div
-            className="bg-white rounded-2xl overflow-hidden"
-            style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}
-          >
-            <div
-              className="px-5 py-4 flex items-center gap-3"
-              style={{ backgroundColor: '#eff6ff', borderBottom: '2px solid #bfdbfe' }}
-            >
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#dbeafe' }}
-              >
-                <LogOut size={22} color="#1d4ed8" />
-              </div>
-              <div>
-                <p className="text-xs" style={{ color: '#64748b' }}>
-                  Registrando saída do veículo
-                </p>
-                <p
-                  className="font-bold"
-                  style={{ color: '#1e293b', fontSize: 22, letterSpacing: '0.1em' }}
-                >
-                  {selected.plate}
-                </p>
-              </div>
-            </div>
-
-            {/* Profile Photo Icon */}
-            <div className="flex justify-center py-4 bg-white border-b" style={{ borderColor: '#f8fafc' }}>
-              <div className="w-24 h-24 rounded-full bg-slate-200 flex items-center justify-center border-4 border-white shadow-sm">
-                <User size={48} color="#94a3b8" />
-              </div>
-            </div>
-
-            <div className="px-5 py-4 flex flex-col gap-0">
-              {[
-                { label: 'Tipo de Veículo', value: selected.type },
-                { label: 'Condutor', value: selected.driver },
-                { label: 'Placa', value: selected.plate },
-                { label: 'Horário de Entrada', value: selected.entryTime },
-                { label: 'Tempo no Pátio', value: selected.duration },
-                { label: 'Portão de Saída', value: 'Norte' },
-              ].map((item, i, arr) => (
-                <div
-                  key={item.label}
-                  className="flex items-center justify-between py-3"
-                  style={{
-                    borderBottom: i < arr.length - 1 ? '1px solid #f8fafc' : 'none',
-                  }}
-                >
-                  <p className="text-sm" style={{ color: '#64748b' }}>
-                    {item.label}
-                  </p>
-                  <p className="text-sm font-semibold" style={{ color: '#1e293b' }}>
-                    {item.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="rounded-xl px-4 py-3"
-            style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe' }}
-          >
-            <p className="text-xs" style={{ color: '#1d4ed8' }}>
-              ℹ️ Ao confirmar, o veículo será desregistrado do pátio e a saída será gravada no
-              sistema de controle.
-            </p>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex-shrink-0 p-4 bg-white" style={{ borderTop: '1px solid #f1f5f9' }}>
-          <button
-            onClick={() => onConfirm(selected.plate, selected.entryTime)}
-            className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity active:opacity-80"
-            style={{ backgroundColor: '#1d4ed8' }}
-          >
-            ✓ Confirmar Check-out
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col" style={{ backgroundColor: '#f1f5f9' }}>
@@ -186,7 +74,7 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar placa ou motorista..."
+            placeholder="Buscar placa..."
             className="flex-1 bg-transparent outline-none text-sm"
             style={{ color: '#1e293b' }}
           />
@@ -194,7 +82,7 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
       </div>
 
       {/* Vehicle list */}
-      <div className="flex-1 overflow-y-auto bg-white">
+      <div className="flex-1 overflow-y-auto bg-white px-4 py-4 flex flex-col gap-3">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-32 gap-2">
             <p className="text-sm" style={{ color: '#94a3b8' }}>
@@ -202,46 +90,61 @@ export function CheckoutScreen({ onConfirm, onBack }: Props) {
             </p>
           </div>
         ) : (
-          filtered.map((vehicle) => (
-            <button
-              key={vehicle.id}
-              onClick={() => setSelected(vehicle)}
-              className="w-full px-4 py-3.5 flex items-center gap-3 text-left transition-colors hover:bg-slate-50 active:bg-slate-100"
-              style={{ borderBottom: '1px solid #f8fafc' }}
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: '#dbeafe' }}
+          filtered.map((vehicle) => {
+            const isSelected = selected?.id === vehicle.id;
+            return (
+              <button
+                key={vehicle.id}
+                onClick={() => setSelected(isSelected ? null : vehicle)}
+                className="w-full px-4 py-4 flex items-center gap-4 text-left rounded-2xl transition-all"
+                style={{
+                  backgroundColor: isSelected ? '#2563eb' : 'white',
+                  border: isSelected ? '3px solid #000000f8' : '3px solid #f1f5f9',
+                }}
               >
-                <LogOut size={17} color="#1d4ed8" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p
-                  className="text-sm font-bold"
-                  style={{ color: '#1e293b', letterSpacing: '0.06em' }}
-                >
-                  {vehicle.plate}
-                </p>
-                <p className="text-xs truncate" style={{ color: '#64748b' }}>
-                  {vehicle.type} · {vehicle.driver}
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1">
                 <div
-                  className="flex items-center gap-1"
-                  style={{ color: '#94a3b8' }}
+                  className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden"
+                  style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.15)' : '#f1f5f9' }}
                 >
-                  <Clock size={11} />
-                  <span className="text-xs font-semibold">{vehicle.duration}</span>
+                  <CircleUser size={44} color={isSelected ? 'white' : '#94a3b8'} />
                 </div>
-                <p className="text-xs" style={{ color: '#cbd5e1' }}>
-                  desde {vehicle.entryTime}
-                </p>
-              </div>
-              <ChevronRight size={16} color="#cbd5e1" className="ml-1" />
-            </button>
-          ))
+                <div className="flex-1 min-w-0">
+                  <p
+                    className="text-sm font-bold"
+                    style={{ color: isSelected ? 'white' : '#1e293b', letterSpacing: '0.06em' }}
+                  >
+                    {vehicle.plate}
+                  </p>
+                  <p className="text-xs truncate font-medium mb-1.5" style={{ color: isSelected ? 'rgba(255,255,255,0.7)' : '#64748b' }}>
+                    {vehicle.type} · {vehicle.driver}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.12)' : '#f8fafc', border: isSelected ? 'none' : '1px solid #e2e8f0' }}>
+                      <Clock size={10} color={isSelected ? 'white' : '#64748b'} />
+                      <span className="text-[10px] font-bold" style={{ color: isSelected ? 'white' : '#64748b' }}>Entrada: {vehicle.entryTime}</span>
+                    </div>
+                    <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: isSelected ? 'rgba(255,255,255,0.12)' : '#f8fafc', border: isSelected ? 'none' : '1px solid #e2e8f0' }}>
+                      <span className="text-[10px] font-bold" style={{ color: isSelected ? 'white' : '#64748b' }}>Tempo: {vehicle.duration}</span>
+                    </div>
+                  </div>
+                </div>
+
+              </button>
+            );
+          })
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex-shrink-0 px-4 pb-4 pt-2 bg-white" style={{ borderTop: '1px solid #f1f5f9' }}>
+        <button
+          onClick={() => selected && onConfirm(selected.plate, selected.entryTime)}
+          disabled={!selected}
+          className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity active:opacity-80 disabled:opacity-40"
+          style={{ backgroundColor: '#1d4ed8' }}
+        >
+          {selected ? `Liberar` : 'Selecione um veículo'}
+        </button>
       </div>
     </div>
   );
