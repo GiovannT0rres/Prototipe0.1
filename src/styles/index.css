@@ -1,3 +1,81 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+
+@font-face {
+  font-family: 'Sol Pro Bold';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Bold.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sol Pro Bold Italic';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Bold_Italic.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Sol Pro';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+
+@font-face {
+  font-family: 'Sol Pro Light';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Light.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sol Pro Light Italic';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Light_Italic.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+
+@font-face {
+  font-family: 'Sol Pro Italic';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Italic.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Sol Pro Black';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Black.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sol Pro Black Italic';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Black_Italic.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Sol Pro Medium';
+  src: url('../assets/fonts/fonnts.com-Sol_Pro_Cond_Medium.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sol Pro Medium Italic';
+  src: url('../assets/fonts//fonnts.com-Sol_Pro_Cond_Medium_Italic.otf') format('opentype'); 
+  font-weight: bold;
+  font-style: normal;
+}

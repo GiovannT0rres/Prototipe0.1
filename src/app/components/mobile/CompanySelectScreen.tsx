@@ -11,10 +11,14 @@ interface Props {
 const RECENT_COMPANIES = ['Styllus Catering', 'Som & Luz Eventos', 'Logística Global Eventos'];
 
 const OTHER_COMPANIES = [
-  'Decora Festas', 'Audiovisual Pro', 'Rent-a-Tent', 'Cena Viva Decorações',
-  'Taste & Co Catering', 'Bebidas Rápidas Delivery', 'Floricultura Central',
-  'VIP Segurança Eventos', 'Geradores de Energia Sul', 'Palco & Som Estruturas',
-  'Mobiliário & Design', 'Equipamentos Áudio RS', 'Buffet Real', 'Transportes Expresso Eventos'
+  "Decora Festas", "Audiovisual Pro", "Rent-a-Tent", "Cena Viva Decorações",
+  "Taste & Co Catering", "Bebidas Rápidas Delivery", "Floricultura Central",
+  "VIP Segurança Eventos", "Geradores de Energia Sul", "Palco & Som Estruturas",
+  "Mobiliário & Design", "Equipamentos Áudio RS", "Buffet Real", "Transportes Expresso Eventos",
+  "Manutenção Predial Silva", "Limpeza & Conservação", "Ar Condicionado Central",
+  "Sinalização & Eventos", "Gráfica Rápida", "Brindes Personalizados",
+  "Uniformes Profissionais", "Consultoria de Eventos", "Seguros & Riscos",
+  "Locação de Veículos", "Suporte Logístico RS", "Telecom & Conectividade"
 ];
 
 const ALL_COMPANIES = [...RECENT_COMPANIES, ...OTHER_COMPANIES];
@@ -24,13 +28,22 @@ export function CompanySelectScreen({ isNewDriver, onSelect, onBack }: Props) {
 
   const filtered = useMemo(() => {
     if (!value.trim()) return null;
-    return ALL_COMPANIES.filter((c) => c.toLowerCase().includes(value.toLowerCase()));
+    const query = value.toLowerCase();
+    return ALL_COMPANIES
+      .filter((c) => c.toLowerCase().includes(query))
+      .sort((a, b) => {
+        const aStarts = a.toLowerCase().startsWith(query);
+        const bStarts = b.toLowerCase().startsWith(query);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return a.localeCompare(b);
+      });
   }, [value]);
 
   const handleConfirm = () => { if (value.trim()) onSelect(value.trim()); };
 
   return (
-    <div className="h-full flex flex-col" style={{ backgroundColor: '#f1f5f9' }}>
+    <div className="h-full flex flex-col" style={{ backgroundColor: '#ffffff' }}>
       {/* Header */}
       <div className="flex-shrink-0 px-4 py-3 flex items-center" style={{ backgroundColor: '#0f2744' }}>
         <button onClick={onBack} className="p-2 rounded-xl flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
@@ -43,15 +56,15 @@ export function CompanySelectScreen({ isNewDriver, onSelect, onBack }: Props) {
       </div>
 
       {/* Input area */}
-      <div className="flex-shrink-0 px-4 pt-4 pb-3 bg-white" style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <p className="font-bold text-base mb-3" style={{ color: '#1e293b' }}>
-          Para qual empresa está prestando serviço?
+      <div className="flex-shrink-0 px-4 pt-4 -pb-1 bg-white" style={{ borderBottom: '1px solid #f1f5f9' }}>
+        <p className="text-2xl mb-3 py-5 leading-tight " style={{ color: '#1e293b' }}>
+          Para qual <span className="font-bold">EMPRESA</span><br /> está prestando serviço?
         </p>
         <div
-          className="flex items-center gap-2 rounded-2xl px-4 py-3 border-2 transition-colors"
-          style={{ borderColor: value ? '#2563eb' : '#e2e8f0', backgroundColor: '#f8fafc' }}
+          className="flex items-center gap-2 rounded-2xl px-4 py-3 border-2 mb-4"
+          style={{ borderColor: '#e2e8f0', backgroundColor: '#f8fafc' }}
         >
-          <Search size={17} color={value ? '#2563eb' : '#94a3b8'} />
+          <Search size={17} color='#94a3b8' />
           <input
             type="text"
             value={value}
@@ -65,66 +78,76 @@ export function CompanySelectScreen({ isNewDriver, onSelect, onBack }: Props) {
             <button onClick={() => setValue('')} className="text-slate-400 text-lg leading-none">×</button>
           )}
         </div>
+
+        {/* Inline Recommendations Chips */}
+        {(value.trim() || !isNewDriver) && filtered !== null && !ALL_COMPANIES.some(c => c === value) && (
+          <div className="flex flex-wrap gap-2 pt-1 pb-2">
+            {!isNewDriver && !value.trim() && (
+              <button
+                key="last-company"
+                onClick={() => setValue("Styllus Catering")}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all active:scale-95 shadow-md"
+                style={{ 
+                  backgroundColor: value === "Styllus Catering" ? "#16a34a" : "#eef2ff",
+                  borderColor: "#16a34a",
+                  color: value === "Styllus Catering" ? "white" : "#16a34a"
+                }}
+              >
+                <Building2 size={12} color={value === "Styllus Catering" ? "white" : "#16a34a"} />
+                <span className="text-xs font-bold">Último: Styllus Catering</span>
+              </button>
+            )}
+            {filtered.slice(0, 6).map((company) => (
+              <button
+                key={company}
+                onClick={() => setValue(company)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all active:scale-95 shadow-sm"
+                style={{ 
+                  backgroundColor: value === company ? "#4f46e5" : "white",
+                  borderColor: value === company ? "#4f46e5" : "#e2e8f0",
+                  color: value === company ? "white" : "#334155"
+                }}
+              >
+                <Building2 size={20} color={value === company ? "white" : "#94a3b8"} />
+                <span className="text-xs font-semibold">{company}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Suggestions */}
-      <div className="flex-1 overflow-y-auto">
-        {filtered !== null ? (
-          <div className="bg-white">
-            {filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-2">
-                <Building2 size={28} color="#cbd5e1" />
-                <p className="text-sm" style={{ color: '#94a3b8' }}>Nenhuma empresa encontrada</p>
-              </div>
-            ) : (
-              filtered.map((company, i) => (
-                <button key={company} onClick={() => setValue(company)}
-                  className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-slate-50 active:bg-slate-100"
-                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#eff6ff' }}>
-                    <Building2 size={13} color="#2563eb" />
-                  </div>
-                  <p className="flex-1 text-sm font-medium" style={{ color: '#1e293b' }}>{company}</p>
-                  <ChevronRight size={13} color="#cbd5e1" />
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto px-4">
+        {!value.trim() && (
+          <div className="mt-1">
+            <p className="text-[15px] font-bold uppercase tracking-[0.2em] mb-4 opacity-30 text-center" style={{ color: "#1e293b" }}>
+              Empresas Recentes
+            </p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {RECENT_COMPANIES.map((company) => (
+                <button
+                  key={company}
+                  onClick={() => setValue(company)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-100 bg-slate-50 transition-all active:scale-95"
+                  style={{ color: "#475569" }}
+                >
+                  <Building2 size={20} color="#94a3b8" />
+                  <span className="text-xs font-semibold">{company}</span>
                 </button>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        ) : (
-          <div className="px-4 py-3 flex flex-col gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>Usados Recentemente</p>
-              <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                {RECENT_COMPANIES.map((c, i) => (
-                  <button key={c} onClick={() => setValue(c)}
-                    className="w-full px-4 py-3.5 flex items-center gap-3 text-left hover:bg-slate-50"
-                    style={{ borderBottom: i < RECENT_COMPANIES.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#eff6ff' }}>
-                      <Building2 size={13} color="#2563eb" />
-                    </div>
-                    <p className="flex-1 font-semibold text-sm" style={{ color: '#1e293b' }}>{c}</p>
-                    <ChevronRight size={13} color="#cbd5e1" />
-                  </button>
-                ))}
-              </div>
+        )}
+
+        {value.trim() && filtered !== null && filtered.length === 0 && (
+          <div className="mt-12 flex flex-col items-center justify-center p-8 border border-dashed border-slate-200 rounded-[2.5rem] bg-slate-50/50">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-4">
+              <Building2 size={20} color="#94a3b8" />
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>Outras Empresas</p>
-              <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                {OTHER_COMPANIES.map((c, i) => (
-                  <button key={c} onClick={() => setValue(c)}
-                    className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-slate-50"
-                    style={{ borderBottom: i < OTHER_COMPANIES.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f1f5f9' }}>
-                      <Building2 size={11} color="#94a3b8" />
-                    </div>
-                    <p className="flex-1 text-sm" style={{ color: '#334155' }}>{c}</p>
-                    <ChevronRight size={12} color="#cbd5e1" />
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="h-2" />
+            <p className="text-xl font-bold mb-1" style={{ color: "#1e293b" }}>Nova Empresa</p>
+            <p className="text-sm text-center leading-relaxed" style={{ color: "#64748b" }}>
+              Esta empresa não está na nossa base, <br /> mas você pode prosseguir.
+            </p>
           </div>
         )}
       </div>

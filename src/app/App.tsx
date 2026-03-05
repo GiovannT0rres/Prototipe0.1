@@ -3,12 +3,14 @@ import { Smartphone, Monitor } from 'lucide-react';
 import { PhoneFrame } from './components/PhoneFrame';
 import { MobileApp } from './components/MobileApp';
 import { AdminDashboard } from './components/AdminDashboard';
+import { useVisualViewport } from './hooks/useVisualViewport';
 
 type View = 'mobile' | 'admin';
 
 export default function App() {
   const [view, setView] = useState<View>('mobile');
   const [isMobileDevice, setIsMobileDevice] = useState(false);
+  const viewportHeight = useVisualViewport();
 
   // Detecta se a tela tem menos de 768px (tamanho típico de tablet/celular)
   useEffect(() => {
@@ -27,7 +29,10 @@ export default function App() {
   // SE FOR CELULAR: Retorna APENAS o MobileApp (sem vitrine, sem barra superior)
   if (isMobileDevice) {
     return (
-      <div className="w-full h-[100dvh] bg-slate-100 overflow-hidden">
+      <div 
+        className="w-full bg-slate-100 overflow-hidden"
+        style={{ height: viewportHeight ? `${viewportHeight}px` : '100dvh' }}
+      >
         <MobileApp />
       </div>
     );
@@ -48,11 +53,11 @@ export default function App() {
             style={{ backgroundColor: '#1d4ed8' }}
           >
             <span className="text-white font-bold text-sm" style={{ letterSpacing: '0.05em' }}>
-              EF
+              ES
             </span>
           </div>
           <div>
-            <p className="text-white font-semibold text-sm">EventFlow</p>
+            <p className="text-white font-semibold text-sm">Entrada Segura</p>
             <p className="text-xs" style={{ color: '#475569' }}>
               Controle Logístico de Eventos
             </p>
@@ -61,7 +66,7 @@ export default function App() {
             className="ml-2 text-xs px-2.5 py-1 rounded-full font-semibold"
             style={{ backgroundColor: '#fef3c7', color: '#92400e' }}
           >
-            Protótipo v1.0
+            Protótipo v1.6.1
           </span>
         </div>
 
@@ -126,10 +131,10 @@ export default function App() {
             >
               <span style={{ color: '#1d4ed8', fontSize: 18 }}>→</span>
               <span>
-                Fluxo: <span style={{ color: '#94a3b8' }}>Início</span> →{' '}
-                <span style={{ color: '#94a3b8' }}>Dados do Veículo</span> →{' '}
-                <span style={{ color: '#94a3b8' }}>Dados do Motorista</span> →{' '}
-                <span style={{ color: '#94a3b8' }}>Validação</span> →{' '}
+                Fluxo: <span style={{ color: '#94a3b8' }}>Home</span> →{' '}
+                <span style={{ color: '#94a3b8' }}>Pessoa</span> →{' '}
+                <span style={{ color: '#94a3b8' }}>Autorização</span> →{' '}
+                <span style={{ color: '#94a3b8' }}>Veículo</span> →{' '}
                 <span style={{ color: '#94a3b8' }}>Check-in Concluído</span>
               </span>
             </div>
