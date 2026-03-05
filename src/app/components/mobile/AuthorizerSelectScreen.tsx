@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
-import { ArrowLeft, UserCheck, Search, ChevronRight } from 'lucide-react';
-import { StepIndicator } from './StepIndicator';
+import { useState, useMemo } from "react";
+import { ArrowLeft, UserCheck, Search, ChevronRight } from "lucide-react";
+import { StepIndicator } from "./StepIndicator";
 
 interface Props {
   isNewDriver: boolean;
@@ -9,49 +9,86 @@ interface Props {
 }
 
 const RECENT_AUTHORIZERS = [
-  { name: 'Carlos Mendes', role: 'Gerente de Operações' },
-  { name: 'Ana Beatriz Souza', role: 'Segurança' },
-  { name: 'Roberto Lima', role: 'Portaria' },
+  { name: "Carlos Mendes", role: "Gerente de Operações" },
+  { name: "Ana Beatriz Souza", role: "Segurança" },
+  { name: "Roberto Lima", role: "Portaria" },
 ];
 
 const OTHER_AUTHORIZERS = [
-  { name: 'Alexandre Torres', role: 'TI' },
-  { name: 'Amanda Ferreira', role: 'RH' },
-  { name: 'Bruno Carvalho', role: 'Manutenção' },
-  { name: 'Camila Rocha', role: 'Logística' },
-  { name: 'Diego Martins', role: 'Compras' },
-  { name: 'Eduardo Pinto', role: 'Financeiro' },
-  { name: 'Fabiana Costa', role: 'Jurídico' },
-  { name: 'Gabriel Nunes', role: 'Engenharia' },
-  { name: 'Helena Vieira', role: 'Qualidade' },
-  { name: 'Igor Santana', role: 'Produção' },
-  { name: 'Juliana Campos', role: 'Comercial' },
-  { name: 'Leandro Moura', role: 'HSE' },
-  { name: 'Marcelo Dias', role: 'Facilities' },
-  { name: 'Natália Ramos', role: 'Projetos' },
-  { name: 'Otávio Silva', role: 'Diretoria' },
+  { name: "Alexandre Torres", role: "TI" },
+  { name: "Amanda Ferreira", role: "RH" },
+  { name: "Bruno Carvalho", role: "Manutenção" },
+  { name: "Camila Rocha", role: "Logística" },
+  { name: "Diego Martins", role: "Compras" },
+  { name: "Eduardo Pinto", role: "Financeiro" },
+  { name: "Fabiana Costa", role: "Jurídico" },
+  { name: "Gabriel Nunes", role: "Engenharia" },
+  { name: "Helena Vieira", role: "Qualidade" },
+  { name: "Igor Santana", role: "Produção" },
+  { name: "Juliana Campos", role: "Comercial" },
+  { name: "Leandro Moura", role: "HSE" },
+  { name: "Marcelo Dias", role: "Facilities" },
+  { name: "Natália Ramos", role: "Projetos" },
+  { name: "Otávio Silva", role: "Diretoria" },
+  { name: "Patrícia Lima", role: "Marketing" },
+  { name: "Ricardo Oliveira", role: "Almoxarifado" },
+  { name: "Sandra Gomes", role: "Vendas" },
+  { name: "Thiago Santos", role: "Expedição" },
+  { name: "Vinícius Rocha", role: "TI" },
+  { name: "Zélia Maria", role: "Copa" },
+  { name: "Mariana Silva", role: "Recepção" },
+  { name: "Marcos Paulo", role: "Elétrica" },
+  { name: "Maurício Leite", role: "Civil" },
+  { name: "Daniella Soares", role: "Arquitetura" },
+  { name: "Fernando Henrique", role: "Frota" },
 ];
 
 const ALL_AUTHORIZERS = [...RECENT_AUTHORIZERS, ...OTHER_AUTHORIZERS];
 
-export function AuthorizerSelectScreen({ isNewDriver, onSelect, onBack }: Props) {
-  const [value, setValue] = useState('');
+export function AuthorizerSelectScreen({
+  isNewDriver,
+  onSelect,
+  onBack,
+}: Props) {
+  const [value, setValue] = useState("");
 
   const filtered = useMemo(() => {
     if (!value.trim()) return null;
-    return ALL_AUTHORIZERS.filter((a) =>
-      a.name.toLowerCase().includes(value.toLowerCase()) ||
-      a.role.toLowerCase().includes(value.toLowerCase())
-    );
+    const query = value.toLowerCase();
+    return ALL_AUTHORIZERS
+      .filter(
+        (a) =>
+          a.name.toLowerCase().includes(query) ||
+          a.role.toLowerCase().includes(query),
+      )
+      .sort((a, b) => {
+        const aStarts = a.name.toLowerCase().startsWith(query);
+        const bStarts = b.name.toLowerCase().startsWith(query);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return a.name.localeCompare(b.name);
+      });
   }, [value]);
 
-  const handleConfirm = () => { if (value.trim()) onSelect(value.trim()); };
+  const handleConfirm = () => {
+    if (value.trim()) onSelect(value.trim());
+  };
 
   return (
-    <div className="h-full flex flex-col" style={{ backgroundColor: '#f1f5f9' }}>
+    <div
+      className="h-full flex flex-col"
+      style={{ backgroundColor: "#ffffff" }}
+    >
       {/* Header */}
-      <div className="flex-shrink-0 px-4 py-3 flex items-center" style={{ backgroundColor: '#0f2744' }}>
-        <button onClick={onBack} className="p-2 rounded-xl flex-shrink-0" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
+      <div
+        className="flex-shrink-0 px-4 py-3 flex items-center"
+        style={{ backgroundColor: "#0f2744" }}
+      >
+        <button
+          onClick={onBack}
+          className="p-2 rounded-xl flex-shrink-0"
+          style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+        >
           <ArrowLeft size={18} color="white" />
         </button>
         <div className="flex-1 flex justify-center">
@@ -61,106 +98,126 @@ export function AuthorizerSelectScreen({ isNewDriver, onSelect, onBack }: Props)
       </div>
 
       {/* Input area */}
-      <div className="flex-shrink-0 px-4 pt-4 pb-3 bg-white" style={{ borderBottom: '1px solid #f1f5f9' }}>
-        <p className="font-bold text-base mb-3" style={{ color: '#1e293b' }}>
-          Quem autorizou a entrada?
+      <div
+        className="flex-shrink-0 px-4 pt-4 pb-1 bg-white"
+        style={{ borderBottom: "1px solid #f1f5f9" }}
+      >
+        <p
+          className="text-2xl mb-3 py-5 leading-tight"
+          style={{ color: "#1e293b" }}
+        >
+          <span className="font-bold">QUEM</span> autorizou <br /> a entrada?
         </p>
         <div
-          className="flex items-center gap-2 rounded-2xl px-4 py-3 border-2 transition-colors"
-          style={{ borderColor: value ? '#16a34a' : '#e2e8f0', backgroundColor: '#f8fafc' }}
+          className="flex items-center gap-2 rounded-2xl px-4 py-3 border-2 mb-4"
+          style={{
+            borderColor: "#e2e8f0",
+            backgroundColor: "#f8fafc",
+          }}
         >
-          <Search size={17} color={value ? '#16a34a' : '#94a3b8'} />
+          <Search size={17} color="#94a3b8" />
           <input
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="Nome do autorizador..."
             className="flex-1 bg-transparent outline-none font-semibold"
-            style={{ fontSize: 14, color: '#1e293b' }}
-            onKeyDown={(e) => e.key === 'Enter' && handleConfirm()}
+            style={{ fontSize: 14, color: "#1e293b" }}
+            onKeyDown={(e) => e.key === "Enter" && handleConfirm()}
           />
           {value && (
-            <button onClick={() => setValue('')} className="text-slate-400 text-lg leading-none">×</button>
+            <button
+              onClick={() => setValue("")}
+              className="text-slate-400 text-lg leading-none"
+            >
+              ×
+            </button>
           )}
         </div>
+
+        {/* Inline Recommendations Chips */}
+        {(value.trim() || !isNewDriver) && filtered !== null && !ALL_AUTHORIZERS.some(a => a.name === value) && (
+          <div className="flex flex-wrap gap-2 pt-1 pb-2">
+            {!isNewDriver && !value.trim() && (
+              <button
+                onClick={() => setValue("Carlos Mendes")}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all active:scale-95 shadow-md"
+                style={{ 
+                  backgroundColor: value === "Carlos Mendes" ? "#4f46e5" : "#eef2ff",
+                  borderColor: "#4f46e5",
+                  color: value === "Carlos Mendes" ? "white" : "#4f46e5"
+                }}
+              >
+                <UserCheck size={12} color={value === "Carlos Mendes" ? "white" : "#4f46e5"} />
+                <span className="text-xs font-bold">Último: Carlos Mendes</span>
+              </button>
+            )}
+            {filtered.slice(0, 6).map((auth) => (
+              <button
+                key={auth.name}
+                onClick={() => setValue(auth.name)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all active:scale-95 shadow-sm"
+                style={{ 
+                  backgroundColor: value === auth.name ? "#4f46e5" : "white",
+                  borderColor: value === auth.name ? "#4f46e5" : "#e2e8f0",
+                  color: value === auth.name ? "white" : "#334155"
+                }}
+              >
+                <UserCheck size={20} color={value === auth.name ? "white" : "#94a3b8"} />
+                <span className="text-xs font-semibold">{auth.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Suggestions */}
-      <div className="flex-1 overflow-y-auto">
-        {filtered !== null ? (
-          <div className="bg-white">
-            {filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-2">
-                <UserCheck size={28} color="#cbd5e1" />
-                <p className="text-sm" style={{ color: '#94a3b8' }}>Nenhum autorizador encontrado</p>
-              </div>
-            ) : (
-              filtered.map((auth, i) => (
-                <button key={auth.name} onClick={() => setValue(auth.name)}
-                  className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-slate-50"
-                  style={{ borderBottom: i < filtered.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0fdf4' }}>
-                    <UserCheck size={15} color="#16a34a" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold" style={{ color: '#1e293b' }}>{auth.name}</p>
-                    <p className="text-xs" style={{ color: '#94a3b8' }}>{auth.role}</p>
-                  </div>
-                  <ChevronRight size={13} color="#cbd5e1" />
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto px-4">
+        {!value.trim() && (
+          <div className="mt-1">
+            <p className="text-[15px] font-bold uppercase tracking-[0.2em] mb-4 opacity-30 text-center" style={{ color: "#1e293b" }}>
+              Autorizadores Recentes
+            </p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {RECENT_AUTHORIZERS.map((auth) => (
+                <button
+                  key={auth.name}
+                  onClick={() => setValue(auth.name)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-100 bg-slate-50 transition-all active:scale-95"
+                  style={{ color: "#475569" }}
+                >
+                  <UserCheck size={20} color="#94a3b8" />
+                  <span className="text-xs font-semibold">{auth.name}</span>
                 </button>
-              ))
-            )}
+              ))}
+            </div>
           </div>
-        ) : (
-          <div className="px-4 py-3 flex flex-col gap-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>Mais Frequentes</p>
-              <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                {RECENT_AUTHORIZERS.map((auth, i) => (
-                  <button key={auth.name} onClick={() => setValue(auth.name)}
-                    className="w-full px-4 py-3.5 flex items-center gap-3 text-left hover:bg-slate-50"
-                    style={{ borderBottom: i < RECENT_AUTHORIZERS.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0fdf4' }}>
-                      <UserCheck size={16} color="#16a34a" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm" style={{ color: '#1e293b' }}>{auth.name}</p>
-                      <p className="text-xs" style={{ color: '#94a3b8' }}>{auth.role}</p>
-                    </div>
-                    <ChevronRight size={13} color="#cbd5e1" />
-                  </button>
-                ))}
-              </div>
+        )}
+
+        {value.trim() && filtered !== null && filtered.length === 0 && (
+          <div className="mt-12 flex flex-col items-center justify-center p-8 border border-dashed border-slate-200 rounded-[2.5rem] bg-slate-50/50">
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm mb-4">
+              <UserCheck size={20} color="#94a3b8" />
             </div>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: '#94a3b8' }}>Outros Autorizadores</p>
-              <div className="bg-white rounded-2xl overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                {OTHER_AUTHORIZERS.map((auth, i) => (
-                  <button key={auth.name} onClick={() => setValue(auth.name)}
-                    className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-slate-50"
-                    style={{ borderBottom: i < OTHER_AUTHORIZERS.length - 1 ? '1px solid #f8fafc' : 'none' }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f1f5f9' }}>
-                      <UserCheck size={13} color="#94a3b8" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm" style={{ color: '#334155' }}>{auth.name}</p>
-                      <p className="text-xs" style={{ color: '#94a3b8' }}>{auth.role}</p>
-                    </div>
-                    <ChevronRight size={12} color="#cbd5e1" />
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="h-2" />
+            <p className="text-sm font-bold mb-1" style={{ color: "#1e293b" }}>Novo Autorizador</p>
+            <p className="text-xs text-center leading-relaxed" style={{ color: "#64748b" }}>
+              Este nome não está na lista padrão, <br /> mas você pode continuar.
+            </p>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div className="flex-shrink-0 p-4 bg-white" style={{ borderTop: '1px solid #f1f5f9' }}>
-        <button onClick={handleConfirm} disabled={!value.trim()}
+      <div
+        className="flex-shrink-0 p-4 bg-white"
+        style={{ borderTop: "1px solid #f1f5f9" }}
+      >
+        <button
+          onClick={handleConfirm}
+          disabled={!value.trim()}
           className="w-full py-4 rounded-2xl font-bold text-base text-white transition-opacity active:opacity-80 disabled:opacity-40"
-          style={{ backgroundColor: '#16a34a' }}>
+          style={{ backgroundColor: "#16a34a" }}
+        >
           Avançar
         </button>
       </div>
